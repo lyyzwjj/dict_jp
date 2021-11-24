@@ -2,33 +2,12 @@ package model
 
 type WordType int64
 
-//	句子		句子
-//	名詞		名词
-//	動詞Ⅰ	动词Ⅰ
-//	動詞Ⅱ	动词Ⅱ
-//	動詞Ⅲ	动词Ⅲ
-//	イ形		い形
-//	ナ形		な形
-//	助詞		助词
-//	代名詞	代词
-//	感
-//	副
-//	副詞		副词
-
-//	连语		前
-//	连体
-//	接		后
-//	接辞
-//	接尾
-//	造语
-//	助数
-
 const (
 	Sentence     = WordType(1 << 0)  //	句子
-	Noun         = WordType(1 << 1)  //	名詞		名词
-	Verb1        = WordType(1 << 2)  //	動詞Ⅰ	动词Ⅰ
-	Verb2        = WordType(1 << 3)  //	動詞Ⅱ	动词Ⅱ
-	Verb3        = WordType(1 << 4)  //	動詞Ⅲ	动词Ⅲ
+	Noun         = WordType(1 << 1)  //	名		名
+	Verb1        = WordType(1 << 2)  //	動Ⅰ		动Ⅰ
+	Verb2        = WordType(1 << 3)  //	動Ⅱ		动Ⅱ
+	Verb3        = WordType(1 << 4)  //	動Ⅲ		动Ⅲ
 	AdjectiveI   = WordType(1 << 5)  //	イ形		い形
 	AdjectiveNa  = WordType(1 << 6)  //	ナ形		な形
 	Auxiliary    = WordType(1 << 8)  //	助詞		助词
@@ -36,22 +15,49 @@ const (
 	Interjection = WordType(1 << 10) //	感		感叹词
 	Adverb1      = WordType(1 << 11) //	副		副
 	Adverb2      = WordType(1 << 12) //	副詞		副词
-	Conjunction1 = WordType(1 << 13) //			连语
-	Conjunction2 = WordType(1 << 14) //			连体
-	Prefix       = WordType(1 << 15) //			接
-	Prefix       = WordType(1 << 16) //			接词
-	Prefix       = WordType(1 << 17) //			接尾
-	Sentence     = WordType(1 << 18) //			造语
-	Sentence     = WordType(1 << 19) //			助数
+	Conjunction1 = WordType(1 << 13) //	連語		连语
+	Conjunction2 = WordType(1 << 14) //	連体		连体
+	Conjunction3 = WordType(1 << 15) //	接		接
+	Conjunction4 = WordType(1 << 16) //	接詞		接词
+	Conjunction5 = WordType(1 << 17) //	接尾		接尾
+	Build        = WordType(1 << 18) //			造语
+	Quantifier   = WordType(1 << 19) //			助数
 )
 
-type Word struct {
-	Id       int
-	WordType WordType
-	// かな 假名
-	Kana string
-	// 漢字 汉字
-	Kanji *string
-	//
+type BookVolume int8
 
+const (
+	PrimaryVolumeOne      = BookVolume(1)
+	PrimaryVolumeTwo      = BookVolume(2)
+	IntermediateVolumeOne = BookVolume(3)
+	IntermediateVolumeTwo = BookVolume(4)
+)
+
+type WordRelation struct {
+	Id    int
+	Word1 Word
+	Word2 Word
+}
+
+type Vocabulary struct {
+	Id    int
+	Kana  string  // かな 假名
+	Kanji *string // 漢字 汉字
+}
+
+type WordMeaning struct {
+	WordId  int
+	Meaning string
+	Explain string
+}
+
+type Word struct {
+	Id            int
+	Kana          string  // かな 假名
+	Kanji         *string // 漢字 汉字
+	Original      bool
+	WordRelations []WordRelation
+	WordMeanings  []WordMeaning
+	WordType      WordType
+	BookVolume    *BookVolume
 }
