@@ -1,4 +1,4 @@
-module github.com/wzzst310/dict_jp
+module github.com/lyyzwjj/dict_jp
 
 go 1.17
 
