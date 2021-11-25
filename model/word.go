@@ -20,7 +20,7 @@ const (
 	Conjunction3 = WordType(1 << 15) //	接		接
 	Conjunction4 = WordType(1 << 16) //	接詞		接词
 	Conjunction5 = WordType(1 << 17) //	接尾		接尾
-	Build        = WordType(1 << 18) //			造语
+	BuildLang    = WordType(1 << 18) //			造语
 	Quantifier   = WordType(1 << 19) //			助数
 )
 
@@ -41,8 +41,8 @@ type WordRelation struct {
 
 type Vocabulary struct {
 	Id    int
-	Kana  string  // かな 假名
-	Kanji *string // 漢字 汉字
+	Kana  string  `gorm:"type:varchar(100);unique_index"` // かな 假名
+	Kanji *string `gorm:"type:varchar(100);unique_index"` // 漢字 汉字
 }
 
 type WordMeaning struct {
