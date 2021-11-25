@@ -1,14 +1,14 @@
 package wjjutils
 
 import (
-	"fmt"
-	"github.com/lyyzwjj/kana"
+	"github.com/bwmarrin/snowflake"
 )
 
-func A() {
-	fmt.Println(kana.NormalizeRomaji("買う"))
-	fmt.Println(kana.NormalizeRomaji("Katakana"))
-}
-func ChangeVerb(Kara, Kanji *string) {
-	fmt.Println(kana.NormalizeRomaji("買う"))
+var NodeGen *snowflake.Node
+
+func InitSnowflake() {
+	var err error
+	if NodeGen, err = snowflake.NewNode(1); err != nil {
+		panic("InitSnowflake init failed!")
+	}
 }

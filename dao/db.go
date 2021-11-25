@@ -16,12 +16,12 @@ func InitMySQLDB() {
 		DefaultStringSize:         255,   // string 类型字段的默认长度
 		SkipInitializeWithVersion: false, // 根据版本自动配置
 	}
-	if Repo, err := gorm.Open(mysql.New(mysqlConfig)); err != nil {
+	var err error
+	if Repo, err = gorm.Open(mysql.New(mysqlConfig)); err != nil {
 		panic("failed to connect database")
 	} else {
 		repoConf, _ := Repo.DB()
 		repoConf.SetMaxIdleConns(2)
 		repoConf.SetMaxOpenConns(10)
 	}
-
 }
