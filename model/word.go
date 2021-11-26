@@ -44,7 +44,7 @@ type RelationType int8
 //}
 
 type VocabularyCore struct {
-	ID    uint   `gorm:"primaryKey;autoIncrement;"`
+	ID    uint   `gorm:"primaryKey;autoIncrement:false;"`
 	Kana  string `gorm:"type:varchar(100);not null;comment:かな;" // index:idx_Kana_kanji,unique;"` // かな 假名
 	Kanji string `gorm:"type:varchar(100);not null;comment:漢字;" // index:idx_Kana_kanji,unique;"` // 漢字 汉字
 }
@@ -62,7 +62,7 @@ func NewVocabulary(vocabularyCore VocabularyCore, original bool) *Vocabulary {
 }
 
 type WordMeaning struct {
-	ID          uint       `gorm:"primaryKey;"`
+	ID          uint       `gorm:"primaryKey;autoIncrement:false;"`
 	WordID      uint       `gorm:"not null;comment:关联Word表主键;"`
 	Major       bool       `gorm:"default:true;not null;comment:是否是最常见释义;"`
 	WordType    WordType   `gorm:"not null;comment:名字类型;"`
