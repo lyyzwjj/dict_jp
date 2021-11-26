@@ -45,8 +45,8 @@ type RelationType int8
 
 type VocabularyCore struct {
 	ID    uint   `gorm:"primaryKey;autoIncrement;"`
-	Kana  string `gorm:"type:varchar(100);not null;comment:かな;index:idx_Kana_kanji,unique;"` // かな 假名
-	Kanji string `gorm:"type:varchar(100);not null;comment:漢字;index:idx_Kana_kanji,unique;"` // 漢字 汉字
+	Kana  string `gorm:"type:varchar(100);not null;comment:かな;" // index:idx_Kana_kanji,unique;"` // かな 假名
+	Kanji string `gorm:"type:varchar(100);not null;comment:漢字;" // index:idx_Kana_kanji,unique;"` // 漢字 汉字
 }
 
 type Vocabulary struct {
@@ -54,26 +54,28 @@ type Vocabulary struct {
 	Original bool `gorm:"default:true;not null;comment:是否是单词原形;"`
 }
 
-func NewVocabulary(vc VocabularyCore, original bool) *Vocabulary {
+func NewVocabulary(vocabularyCore VocabularyCore, original bool) *Vocabulary {
 	return &Vocabulary{
-		VocabularyCore: vc,
+		VocabularyCore: vocabularyCore,
 		Original:       original,
 	}
 }
 
 type WordMeaning struct {
-	ID          uint `gorm:"primaryKey;"`
-	WordID      uint
+	ID          uint       `gorm:"primaryKey;"`
+	WordID      uint       `gorm:"not null;comment:关联Word表主键;"`
 	Major       bool       `gorm:"default:true;not null;comment:是否是最常见释义;"`
 	WordType    WordType   `gorm:"not null;comment:名字类型;"`
 	Meaning     string     `gorm:"type:varchar(2000);comment:释义;"`
 	Description string     `gorm:"type:varchar(2000);comment:解释;"`
-	BookVolume  BookVolume `gorm:"not null;comment:教材;"`
-	UnitNo      int8       `gorm:"not null;comment:课程序号;"`
+	BookVolume  BookVolume `gorm:"not null;default:0;comment:教材;"`
+	UnitNo      uint8      `gorm:"not null;default:0;comment:课程序号;"`
+	pitchAccent int8       `gorm:"not null;default:-1;comment:音调;"`
 }
 
 type Word struct {
 	VocabularyCore
+	QueryCount   uint          `gorm:"not null;default:0;comment:查询次数;"`
 	WordMeanings []WordMeaning `gorm:"foreignKey:WordID;references:ID"`
 	// WordRelations []*Word   `gorm:"many2many:word_relations"`
 }
