@@ -22,5 +22,4 @@ func main() {
 	//	panic("join table setup failed!")
 	//}
 	dao.Repo.AutoMigrate(&model.Vocabulary{}, &model.Word{}, &model.WordMeaning{})
-
 }

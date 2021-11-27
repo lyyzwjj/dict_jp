@@ -1,6 +1,6 @@
 package model
 
-type WordType int8
+type WordType uint8
 
 const (
 	Sentence     = WordType(0)  //	句子
@@ -24,7 +24,7 @@ const (
 	Quantifier   = WordType(19) //			助数
 )
 
-type BookVolume int8
+type BookVolume uint8
 
 const (
 	NullVolume            = BookVolume(0)
@@ -34,7 +34,25 @@ const (
 	IntermediateVolumeTwo = BookVolume(4)
 )
 
-type RelationType int8
+type PitchAccent int
+
+const (
+	PitchAccentLvNil = PitchAccent(-1)
+	PitchAccentLv0   = PitchAccent(0 << 1)
+	PitchAccentLv1   = PitchAccent(1 << 1)
+	PitchAccentLv2   = PitchAccent(2 << 1)
+	PitchAccentLv3   = PitchAccent(3 << 1)
+	PitchAccentLv4   = PitchAccent(4 << 1)
+	PitchAccentLv5   = PitchAccent(5 << 1)
+	PitchAccentLv6   = PitchAccent(6 << 1)
+	PitchAccentLv7   = PitchAccent(7 << 1)
+	PitchAccentLv8   = PitchAccent(8 << 1)
+	PitchAccentLv9   = PitchAccent(9 << 1)
+	PitchAccentLv10  = PitchAccent(10 << 1)
+	PitchAccentLv11  = PitchAccent(11 << 1)
+)
+
+type RelationType uint8
 
 //type WordRelation struct {
 //	ID           int
@@ -44,9 +62,10 @@ type RelationType int8
 //}
 
 type VocabularyCore struct {
-	ID    uint   `gorm:"primaryKey;autoIncrement:false;"`
-	Kana  string `gorm:"type:varchar(100);not null;comment:かな;" // index:idx_Kana_kanji,unique;"` // かな 假名
-	Kanji string `gorm:"type:varchar(100);not null;comment:漢字;" // index:idx_Kana_kanji,unique;"` // 漢字 汉字
+	ID     uint64 `gorm:"type:bigint(20);primaryKey;autoIncrement:false;"`
+	Kana   string `gorm:"type:varchar(255);not null;comment:かな;" // index:idx_Kana_kanji,unique;"` // かな 假名
+	Kanji  string `gorm:"type:varchar(255);not null;comment:漢字;" // index:idx_Kana_kanji,unique;"` // 漢字 汉字
+	Romaji string `gorm:"type:varchar(255);not null;comment:ロマ字;"`
 }
 
 type Vocabulary struct {
@@ -62,20 +81,25 @@ func NewVocabulary(vocabularyCore VocabularyCore, original bool) *Vocabulary {
 }
 
 type WordMeaning struct {
-	ID          uint       `gorm:"primaryKey;autoIncrement:false;"`
+	ID          uint64     `gorm:"type:bigint(20);primaryKey;autoIncrement:false;"`
 	WordID      uint       `gorm:"not null;comment:关联Word表主键;"`
-	Major       bool       `gorm:"default:true;not null;comment:是否是最常见释义;"`
 	WordType    WordType   `gorm:"not null;comment:名字类型;"`
 	Meaning     string     `gorm:"type:varchar(2000);comment:释义;"`
 	Description string     `gorm:"type:varchar(2000);comment:解释;"`
 	BookVolume  BookVolume `gorm:"not null;default:0;comment:教材;"`
 	UnitNo      uint8      `gorm:"not null;default:0;comment:课程序号;"`
-	pitchAccent int8       `gorm:"not null;default:-1;comment:音调;"`
 }
 
 type Word struct {
 	VocabularyCore
+	PitchAccent  PitchAccent   `gorm:"type:int(11);not null;default:-1;comment:音调;"`
 	QueryCount   uint          `gorm:"not null;default:0;comment:查询次数;"`
+	WordType     WordType      `gorm:"not null;comment:名字类型;"`
+	Meaning      string        `gorm:"type:varchar(2000);comment:释义;"`
+	Description  string        `gorm:"type:varchar(2000);comment:解释;"`
+	BookVolume   BookVolume    `gorm:"not null;default:0;comment:教材;"`
+	UnitNo       uint8         `gorm:"not null;default:0;comment:课程序号;"`
+	Masu         string        `gorm:"type:varchar(255);not null;comment:ます形,动词专有;"`
 	WordMeanings []WordMeaning `gorm:"foreignKey:WordID;references:ID"`
 	// WordRelations []*Word   `gorm:"many2many:word_relations"`
 }

@@ -12,3 +12,10 @@ func InitSnowflake() {
 		panic("InitSnowflake init failed!")
 	}
 }
+
+func GenID() uint64 {
+	if NodeGen == nil {
+		InitSnowflake()
+	}
+	return uint64(NodeGen.Generate())
+}
