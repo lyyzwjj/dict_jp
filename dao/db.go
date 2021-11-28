@@ -9,7 +9,7 @@ var (
 	Repo *gorm.DB
 )
 
-func InitMySQLDB() {
+func init() {
 	dsn := "root:Wzzst310@163.com@tcp(wjjzst.com:3306)/dict_jp?charset=utf8&parseTime=True&loc=Local"
 	mysqlConfig := mysql.Config{
 		DSN:                       dsn,   // DSN data source name

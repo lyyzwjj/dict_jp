@@ -6,7 +6,7 @@ import (
 
 var NodeGen *snowflake.Node
 
-func InitSnowflake() {
+func init() {
 	var err error
 	if NodeGen, err = snowflake.NewNode(1); err != nil {
 		panic("InitSnowflake init failed!")
@@ -14,8 +14,5 @@ func InitSnowflake() {
 }
 
 func GenID() uint64 {
-	if NodeGen == nil {
-		InitSnowflake()
-	}
 	return uint64(NodeGen.Generate())
 }

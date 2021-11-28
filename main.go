@@ -15,11 +15,10 @@ func main() {
 	//fmt.Println(strings.Compare("ううん", "じゅんび"))
 	//fmt.Println(strings.Compare("ううん", "ジョジョと"))
 	//wjjutils.A()
-	dao.InitMySQLDB()
 	// dao.Repo.AutoMigrate(&model.Vocabulary{})
 	//var err = dao.Repo.SetupJoinTable(&model.Word{}, "WordRelations", &model.WordRelation{})
 	//if err != nil {
 	//	panic("join table setup failed!")
 	//}
-	dao.Repo.AutoMigrate(&model.Vocabulary{}, &model.Word{}, &model.WordMeaning{})
+	dao.Repo.AutoMigrate(&model.Vocabulary{}, &model.Word{}, &model.WordBook{})
 }
