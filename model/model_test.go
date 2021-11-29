@@ -91,6 +91,11 @@ func TestDataInsert(t *testing.T) {
 		UnitNo:         26,
 	}
 	var word Word
+	if err := dao.Repo.Where("Kana = ? AND Kanji >= ?", wd.Kana, wd.Kanji).Preload("WordBooks").First(&word).Error; err != nil {
+		fmt.Println(word)
+	} else {
+		fmt.Println(word)
+	}
 	if err := dao.Repo.Where("Kana = ? AND Kanji >= ?", wd.Kana, wd.Kanji).First(&word).Error; err != nil {
 		var ok bool
 		if word, ok = wd.Data2Model(); ok {
