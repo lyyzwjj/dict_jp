@@ -1,7 +1,9 @@
 package model
 
 import (
+	"fmt"
 	"github.com/lyyzwjj/kana"
+	"strconv"
 	"strings"
 )
 
@@ -19,6 +21,29 @@ type WordData struct {
 	UnitNo         uint8
 }
 
+func (wd *WordData) WordDataCsvStringer() string {
+	return fmt.Sprintf("%s,%s,%s,%d,%s,%s,%s,%s,%s,%s,%d", wd.Kana, wd.Kanji, wd.WordTypeName, wd.PitchAccent, wd.Meaning, wd.Description, wd.Masu, wd.TransitiveType, wd.Preposition, wd.Book, wd.UnitNo)
+}
+
+func WordDataCsvParser(line string) WordData {
+	fields := strings.Split(line, ",")
+	pitchAccent, _ := strconv.Atoi(fields[3])
+	unitNo, _ := strconv.ParseUint(fields[10], 10, 8)
+	return WordData{
+		Kana:           fields[0],
+		Kanji:          fields[1],
+		WordTypeName:   fields[2],
+		PitchAccent:    pitchAccent,
+		Meaning:        fields[4],
+		Description:    fields[5],
+		Masu:           fields[6],
+		TransitiveType: fields[7],
+		Preposition:    fields[8],
+		Book:           fields[9],
+		UnitNo:         uint8(unitNo),
+	}
+}
+
 func (wd *WordData) Check() (WordTypeValue int, ok bool) {
 	if ok = checkTransitiveType(wd.TransitiveType); !ok {
 		return
@@ -33,9 +58,9 @@ func (wd *WordData) Check() (WordTypeValue int, ok bool) {
 	return
 }
 
-func (wd *WordData) Data2Model() (word Word, ok bool) {
+func (wd *WordData) Data2Model() (word Word, checkOk bool) {
 	var WordTypeValue int
-	if WordTypeValue, ok = wd.Check(); ok {
+	if WordTypeValue, checkOk = wd.Check(); checkOk {
 		word = Word{
 			WordCore: WordCore{
 				Kana:   wd.Kana,
@@ -60,36 +85,36 @@ func (wd *WordData) Data2Model() (word Word, ok bool) {
 	return
 }
 
-func (wd *WordData) DataMergeModel(w *Word) (result bool) {
+func (wd *WordData) DataMergeModel(w *Word) (update, checkOk bool) {
 	var wordTypeValueFrom int
-	if wordTypeValueFrom, result = wd.Check(); result {
+	if wordTypeValueFrom, checkOk = wd.Check(); checkOk {
 		if wordTypeValue, ok := mergeWordType(wordTypeValueFrom, w.WordTypeValue); ok {
-			result = true
+			update = true
 			w.WordTypeValue = wordTypeValue
 		}
 		if pitchAccent, ok := mergePitchAccent(wd.PitchAccent, w.PitchAccent); ok {
-			result = true
+			update = true
 			w.PitchAccent = pitchAccent
 		}
 		trimMeaning := strings.TrimSpace(wd.Meaning)
 		if trimMeaning != "" && !strings.Contains(w.Meaning, trimMeaning) {
-			result = true
+			update = true
 			w.Meaning = w.Meaning + "\n" + wd.Meaning
 		}
 		trimDescription := strings.TrimSpace(wd.Description)
 		if trimDescription != "" && !strings.Contains(w.Description, trimDescription) {
-			result = true
+			update = true
 			w.Description = w.Description + "\n" + wd.Description
 		}
 		if isVerbByName(wd.WordTypeName) && !isVerbByValue(w.WordTypeValue) {
 			masu := strings.TrimSpace(wd.Masu)
 			if masu != "" && w.Masu != masu {
-				result = true
+				update = true
 				w.Masu = masu
 			}
 			preposition := strings.TrimSpace(wd.Preposition)
 			if preposition != "" && w.Preposition != preposition {
-				result = true
+				update = true
 				w.Preposition = preposition
 			}
 		}
@@ -101,7 +126,7 @@ func (wd *WordData) DataMergeModel(w *Word) (result bool) {
 			}
 		}
 		if !existWordBook {
-			result = true
+			update = true
 			w.WordBooks = append(w.WordBooks, WordBook{
 				Book:   wd.Book,
 				UnitNo: wd.UnitNo,
