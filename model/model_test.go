@@ -8,6 +8,8 @@ import (
 	k "github.com/lyyzwjj/kana"
 	"gorm.io/gorm"
 	"os"
+	"path"
+	"strings"
 	"testing"
 )
 
@@ -171,6 +173,45 @@ func TestWriteCsv(t *testing.T) {
 	//parser := WordDataCsvParser(str)
 	//fmt.Printf("%#v\n", parser)
 }
+func TestReadAllCsv(t *testing.T) {
+	ReadAllCsv()
+}
+func ReadAllCsv() {
+	csvFilePath := "resources/raw/大家的日语第二版初级2_26.csv"
+	fileNameWithoutExt := strings.TrimSuffix(path.Base(csvFilePath), path.Ext(csvFilePath))
+	parts := strings.Split(fileNameWithoutExt, "_")
+	if len(parts) != 2 {
+		fmt.Println("fileName err", fileNameWithoutExt)
+		return
+	}
+	book := parts[0]
+	unitNo := parts[1]
+	f, err := os.Open(csvFilePath)
+	if err != nil {
+		fmt.Println("Open csv file failed Error: ", err)
+		return
+	}
+	reader := csv.NewReader(f)
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			fmt.Println("Close csv file failed Error: ", err)
+		}
+	}(f)
+	// 可以一次性读完
+	arrs, err := reader.ReadAll()
+	if err != nil {
+		fmt.Println("Read csv file failed Error: ", err)
+		return
+	}
+	for _, arr := range arrs {
+		arr = arr[0 : len(arr)-1]
+		arr = append(arr, book, unitNo)
+		wd := WordDataCsvParser(arr)
+		dataInsert(&wd)
+	}
+}
+
 func WriteCsv() {
 	csvFilePath := "resources/raw/test.csv"
 	f, err := os.OpenFile(csvFilePath, os.O_CREATE|os.O_RDWR, 0666)
@@ -194,8 +235,13 @@ func WriteCsv() {
 		Book:           BookPrimaryTwo,
 		UnitNo:         26,
 	}
-	str := wd.WordDataCsvStringer()
-	writer.Write([]string{str + "\n"})
+	arr := wd.WordDataCsvStringer()
+	fmt.Println(arr)
+	// writer.WriteAll([][]string{arr})
+	if err := writer.Write(arr); err != nil {
+		fmt.Println("write to csv file failed", arr)
+		return
+	}
 	//t := reflect.TypeOf(&WordData{})
 	//if t.Kind() == reflect.Ptr {
 	//	t = t.Elem()

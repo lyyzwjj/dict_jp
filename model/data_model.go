@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"github.com/lyyzwjj/kana"
 	"strconv"
 	"strings"
@@ -21,25 +20,25 @@ type WordData struct {
 	UnitNo         uint8
 }
 
-func (wd *WordData) WordDataCsvStringer() string {
-	return fmt.Sprintf("%s,%s,%s,%d,%s,%s,%s,%s,%s,%s,%d", wd.Kana, wd.Kanji, wd.WordTypeName, wd.PitchAccent, wd.Meaning, wd.Description, wd.Masu, wd.TransitiveType, wd.Preposition, wd.Book, wd.UnitNo)
+func (wd *WordData) WordDataCsvStringer() (arr []string) {
+	arr = append(arr, wd.Masu, wd.Kanji, wd.Kana, strconv.Itoa(wd.PitchAccent), wd.WordTypeName, wd.Meaning, wd.Description, wd.TransitiveType, wd.Preposition, wd.Book, strconv.Itoa(int(wd.UnitNo)))
+	return
 }
 
-func WordDataCsvParser(line string) WordData {
-	fields := strings.Split(line, ",")
-	pitchAccent, _ := strconv.Atoi(fields[3])
-	unitNo, _ := strconv.ParseUint(fields[10], 10, 8)
+func WordDataCsvParser(arr []string) WordData {
+	pitchAccent, _ := strconv.Atoi(arr[3])
+	unitNo, _ := strconv.ParseUint(arr[10], 10, 8)
 	return WordData{
-		Kana:           fields[0],
-		Kanji:          fields[1],
-		WordTypeName:   fields[2],
+		Masu:           arr[0],
+		Kanji:          arr[1],
+		Kana:           arr[2],
 		PitchAccent:    pitchAccent,
-		Meaning:        fields[4],
-		Description:    fields[5],
-		Masu:           fields[6],
-		TransitiveType: fields[7],
-		Preposition:    fields[8],
-		Book:           fields[9],
+		WordTypeName:   arr[4],
+		Meaning:        arr[5],
+		Description:    arr[6],
+		TransitiveType: arr[7],
+		Preposition:    arr[8],
+		Book:           arr[9],
 		UnitNo:         uint8(unitNo),
 	}
 }
