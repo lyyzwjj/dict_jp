@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/lyyzwjj/kana"
 	"strconv"
 	"strings"
@@ -26,12 +27,24 @@ func (wd *WordData) WordDataCsvStringer() (arr []string) {
 }
 
 func WordDataCsvParser(arr []string) WordData {
-	pitchAccent, _ := strconv.Atoi(arr[3])
+	var pitchAccent int
+	for _, p := range strings.Split(arr[3], "|") {
+		if subPa, err := strconv.Atoi(p); err == nil {
+			if subPa == PitchAccentLvNil {
+				pitchAccent = subPa
+			} else {
+				pitchAccent = pitchAccent | (1 << subPa)
+			}
+		} else {
+			fmt.Printf("pitchAccent parser error, arr[3]: %v\n", arr[3])
+			panic("pitchAccent parser error, arr[3]: err: " + err.Error())
+		}
+	}
 	unitNo, _ := strconv.ParseUint(arr[10], 10, 8)
 	return WordData{
 		Masu:           arr[0],
-		Kanji:          arr[1],
-		Kana:           arr[2],
+		Kana:           arr[1],
+		Kanji:          arr[2],
 		PitchAccent:    pitchAccent,
 		WordTypeName:   arr[4],
 		Meaning:        arr[5],
@@ -47,6 +60,9 @@ func (wd *WordData) Check() (WordTypeValue int, ok bool) {
 	if ok = checkTransitiveType(wd.TransitiveType); !ok {
 		return
 	}
+	if _, isVerb := verbNameSet[wd.WordTypeName]; isVerb && strings.TrimSpace(wd.TransitiveType) == TransitiveTypeNil {
+		return
+	}
 	if ok = checkBook(wd.Book); !ok {
 		return
 	}
@@ -54,6 +70,7 @@ func (wd *WordData) Check() (WordTypeValue int, ok bool) {
 		return
 	}
 	WordTypeValue, ok = wordTypeName2Value(wd.WordTypeName)
+
 	return
 }
 

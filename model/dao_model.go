@@ -12,16 +12,17 @@ const (
 	BookIntermediateOne        = "大家的日语第二版中级1"
 	BookIntermediateTwo        = "大家的日语第二版中级2"
 	PitchAccentLvNil           = -1
-	PitchAccentLv0             = 0 << 1
+	PitchAccentLv0             = 1 << 0
 	PitchAccentLv1             = 1 << 1
-	PitchAccentLv2             = 2 << 1
-	PitchAccentLv3             = 3 << 1
-	PitchAccentLv4             = 4 << 1
-	PitchAccentLv5             = 5 << 1
-	PitchAccentLv6             = 6 << 1
-	PitchAccentLv7             = 7 << 1
-	PitchAccentLv8             = 8 << 1
-	PitchAccentLv9             = 9 << 1
+	PitchAccentLv2             = 1 << 2
+	PitchAccentLv3             = 1 << 3
+	PitchAccentLv4             = 1 << 4
+	PitchAccentLv5             = 1 << 5
+	PitchAccentLv6             = 1 << 6
+	PitchAccentLv7             = 1 << 7
+	PitchAccentLv8             = 1 << 8
+	PitchAccentLv9             = 1 << 9
+	PitchAccentLvAll           = PitchAccentLv0 | PitchAccentLv1 | PitchAccentLv2 | PitchAccentLv3 | PitchAccentLv4 | PitchAccentLv5 | PitchAccentLv6 | PitchAccentLv7 | PitchAccentLv8 | PitchAccentLv9
 	TransitiveTypeNil          = ""
 	TransitiveTypeBoth         = "自他"
 	TransitiveTypeTransitive   = "他"
@@ -36,15 +37,15 @@ var (
 	WordTypeNoun         = wordType{"名", 1 << 4}   //	名		名
 	WordTypeAdjectiveI   = wordType{"イ形", 1 << 5}  //	イ形		い形
 	WordTypeAdjectiveNa  = wordType{"ナ形", 1 << 6}  //	ナ形		な形
-	WordTypeAuxiliary    = wordType{"助詞", 1 << 7}  //	助詞		助词
-	WordTypePronoun      = wordType{"代名詞", 1 << 8} //	代名詞	代词
+	WordTypeAuxiliary    = wordType{"助", 1 << 7}   //	助		助
+	WordTypePronoun      = wordType{"代", 1 << 8}   //	代名詞	代词
 	WordTypeInterjection = wordType{"感", 1 << 9}   //	感		感叹词
 	WordTypeAdverb1      = wordType{"副", 1 << 10}  //	副		副
 	WordTypeAdverb2      = wordType{"副詞", 1 << 11} //	副詞		副词
 	WordTypeConjunction1 = wordType{"連語", 1 << 12} //	連語		连语
 	WordTypeConjunction2 = wordType{"連体", 1 << 13} //	連体		连体
 	WordTypeConjunction3 = wordType{"接", 1 << 14}  //	接		接
-	WordTypeConjunction4 = wordType{"接詞", 1 << 15} //	接詞		接词
+	WordTypeConjunction4 = wordType{"接辞", 1 << 15} //	接辞		接词
 	WordTypeConjunction5 = wordType{"接尾", 1 << 16} //	接尾		接尾
 	WordTypeBuildLang    = wordType{"造語", 1 << 17} //			造语
 	WordTypeQuantifier   = wordType{"助数", 1 << 18} //			助数
@@ -79,19 +80,7 @@ var (
 		WordTypeBuildLang.name:    WordTypeBuildLang,
 		WordTypeQuantifier.name:   WordTypeQuantifier,
 	}
-	pitchAccentSet = map[int]bool{
-		PitchAccentLvNil: true,
-		PitchAccentLv0:   true,
-		PitchAccentLv1:   true,
-		PitchAccentLv2:   true,
-		PitchAccentLv3:   true,
-		PitchAccentLv4:   true,
-		PitchAccentLv5:   true,
-		PitchAccentLv6:   true,
-		PitchAccentLv7:   true,
-		PitchAccentLv8:   true,
-		PitchAccentLv9:   true,
-	}
+
 	transitiveTypeSet = map[string]bool{
 		TransitiveTypeNil:          true,
 		TransitiveTypeBoth:         true,
@@ -115,7 +104,7 @@ func wordTypeName2Value(wordTypeFromName string) (wordTypeValue int, ok bool) {
 	return
 }
 func checkPitchAccent(pitchAccentFrom int) (ok bool) {
-	_, ok = pitchAccentSet[pitchAccentFrom]
+	ok = pitchAccentFrom == PitchAccentLvNil || pitchAccentFrom&PitchAccentLvAll == pitchAccentFrom
 	return
 }
 
@@ -188,12 +177,12 @@ type Vocabulary struct {
 	Original bool `gorm:"default:true;not null;comment:是否是单词原形;"`
 }
 
-func NewVocabulary(wordCore WordCore, original bool) *Vocabulary {
-	return &Vocabulary{
-		WordCore: wordCore,
-		Original: original,
-	}
-}
+//func NewVocabulary(wordCore WordCore, original bool) *Vocabulary {
+//	return &Vocabulary{
+//		WordCore: wordCore,
+//		Original: original,
+//	}
+//}
 
 type WordBook struct {
 	ID     uint   `gorm:"type:int(11) auto_increment;primaryKey;autoIncrement:true;"`

@@ -177,7 +177,7 @@ func TestReadAllCsv(t *testing.T) {
 	ReadAllCsv()
 }
 func ReadAllCsv() {
-	csvFilePath := "resources/raw/大家的日语第二版初级2_26.csv"
+	csvFilePath := "resources/大家的日语第二版初级2_27.csv"
 	fileNameWithoutExt := strings.TrimSuffix(path.Base(csvFilePath), path.Ext(csvFilePath))
 	parts := strings.Split(fileNameWithoutExt, "_")
 	if len(parts) != 2 {
