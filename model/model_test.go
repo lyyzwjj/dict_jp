@@ -1,12 +1,14 @@
 package model
 
 import (
+	"bytes"
 	"encoding/csv"
 	"errors"
 	"fmt"
 	"github.com/lyyzwjj/dict_jp/dao"
 	k "github.com/lyyzwjj/kana"
 	"gorm.io/gorm"
+	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -17,6 +19,32 @@ import (
 //	word  Word
 //	words []Word
 //)
+var (
+	replaces = [][]string{
+		{"-1", "ー111111"},
+		{"-", "ー"},
+		{"ー111111", "-1"},
+		{"動I", "動I"},
+		{"十形", "ナ形"},
+		{"動I", "動Ⅰ"},
+		{"副词", "副詞"},
+		{"〉", ""},
+		{"〈", ""},
+		{">", ""},
+		{"<", ""},
+		{"◎", "0"},
+		{"О", "0"},
+		{"O", "0"},
+		{"⓪", "0"},
+		{"⑩", "0"},
+		{"①", "1"},
+		{"②", "2"},
+		{"③", "3"},
+		{"④", "4"},
+		{"⑤", "5"},
+		{"⑥", "6"},
+	}
+)
 
 func TestWordInsert(t *testing.T) {
 	words := []Word{
@@ -82,6 +110,24 @@ func TestWordSelect(t *testing.T) {
 	dao.Repo.Where("kana LIKE ?", "%か%").Find(&words)
 	fmt.Println(words)
 }
+
+func TestReplaceFileString(t *testing.T) {
+	rawFilePath := "resources/raw/大家的日语第二版初级2_31_raw.txt"
+	filePath := strings.ReplaceAll(rawFilePath, "_raw", "")
+	input, err := ioutil.ReadFile(rawFilePath)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	for _, replace := range replaces {
+		input = bytes.ReplaceAll(input, []byte(replace[0]), []byte(replace[1]))
+	}
+	if err = ioutil.WriteFile(filePath, input, 0666); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
 func TestDataInsert(t *testing.T) {
 	wd := WordData{
 		Kana:           "〜ベん",
@@ -173,11 +219,30 @@ func TestWriteCsv(t *testing.T) {
 	//parser := WordDataCsvParser(str)
 	//fmt.Printf("%#v\n", parser)
 }
+
 func TestReadAllCsv(t *testing.T) {
-	ReadAllCsv()
+	dirPath := "resources/"
+	//err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+	//	fmt.Println(path)
+	//	return nil
+	//})
+	//if err != nil {
+	//	return
+	//}
+	fs, _ := ioutil.ReadDir(dirPath)
+	for _, file := range fs {
+		if !file.IsDir() {
+			fmt.Println(dirPath + file.Name())
+			ReadSingleCsv(dirPath + file.Name())
+		}
+	}
 }
-func ReadAllCsv() {
-	csvFilePath := "resources/大家的日语第二版初级2_27.csv"
+
+func TestReadSingleCsv(t *testing.T) {
+	ReadSingleCsv("resources/大家的日语第二版初级2_31.csv")
+}
+
+func ReadSingleCsv(csvFilePath string) {
 	fileNameWithoutExt := strings.TrimSuffix(path.Base(csvFilePath), path.Ext(csvFilePath))
 	parts := strings.Split(fileNameWithoutExt, "_")
 	if len(parts) != 2 {
@@ -221,7 +286,6 @@ func WriteCsv() {
 	}
 	writer := csv.NewWriter(f)
 	defer writer.Flush()
-
 	wd := WordData{
 		Kana:           "〜ベん",
 		Kanji:          "〜弁",
