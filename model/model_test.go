@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -28,6 +29,8 @@ var (
 		{"十形", "ナ形"},
 		{"動I", "動Ⅰ"},
 		{"副词", "副詞"},
+		{"亻形", "イ形"},
+		{"连体", "イ形"},
 		{"〉", ""},
 		{"〈", ""},
 		{">", ""},
@@ -112,20 +115,23 @@ func TestWordSelect(t *testing.T) {
 }
 
 func TestReplaceFileString(t *testing.T) {
-	rawFilePath := "resources/raw/大家的日语第二版初级2_31_raw.txt"
-	filePath := strings.ReplaceAll(rawFilePath, "_raw", "")
-	input, err := ioutil.ReadFile(rawFilePath)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	for i := 34; i < 40; i++ {
+		rawFilePath := "resources/raw/大家的日语第二版初级2_" + strconv.Itoa(i) + "_raw.txt"
+		filePath := strings.ReplaceAll(rawFilePath, "_raw", "")
+		input, err := ioutil.ReadFile(rawFilePath)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		for _, replace := range replaces {
+			input = bytes.ReplaceAll(input, []byte(replace[0]), []byte(replace[1]))
+		}
+		if err = ioutil.WriteFile(filePath, input, 0666); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	}
-	for _, replace := range replaces {
-		input = bytes.ReplaceAll(input, []byte(replace[0]), []byte(replace[1]))
-	}
-	if err = ioutil.WriteFile(filePath, input, 0666); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+
 }
 
 func TestDataInsert(t *testing.T) {
@@ -239,7 +245,7 @@ func TestReadAllCsv(t *testing.T) {
 }
 
 func TestReadSingleCsv(t *testing.T) {
-	ReadSingleCsv("resources/大家的日语第二版初级2_31.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级2_36.csv")
 }
 
 func ReadSingleCsv(csvFilePath string) {

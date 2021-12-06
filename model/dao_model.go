@@ -49,6 +49,7 @@ var (
 	WordTypeConjunction5 = wordType{"接尾", 1 << 16} //	接尾		接尾
 	WordTypeBuildLang    = wordType{"造語", 1 << 17} //			造语
 	WordTypeQuantifier   = wordType{"助数", 1 << 18} //			助数
+	WordTypeHelper       = wordType{"補助", 1 << 19} //			補助
 	verbNameSet          = map[string]wordType{
 		WordTypeVerb1.name: WordTypeVerb1,
 		WordTypeVerb2.name: WordTypeVerb2,
@@ -79,6 +80,7 @@ var (
 		WordTypeConjunction5.name: WordTypeConjunction5,
 		WordTypeBuildLang.name:    WordTypeBuildLang,
 		WordTypeQuantifier.name:   WordTypeQuantifier,
+		WordTypeHelper.name:       WordTypeHelper,
 	}
 
 	transitiveTypeSet = map[string]bool{
