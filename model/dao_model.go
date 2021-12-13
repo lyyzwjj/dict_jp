@@ -50,6 +50,7 @@ var (
 	WordTypeBuildLang    = wordType{"造語", 1 << 17} //			造语
 	WordTypeQuantifier   = wordType{"助数", 1 << 18} //			助数
 	WordTypeHelper       = wordType{"補助", 1 << 19} //			補助
+	Number               = wordType{"数", 1 << 20}  //			数
 	verbNameSet          = map[string]wordType{
 		WordTypeVerb1.name: WordTypeVerb1,
 		WordTypeVerb2.name: WordTypeVerb2,
@@ -81,6 +82,7 @@ var (
 		WordTypeBuildLang.name:    WordTypeBuildLang,
 		WordTypeQuantifier.name:   WordTypeQuantifier,
 		WordTypeHelper.name:       WordTypeHelper,
+		Number.name:               Number,
 	}
 
 	transitiveTypeSet = map[string]bool{

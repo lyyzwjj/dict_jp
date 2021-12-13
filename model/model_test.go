@@ -31,6 +31,9 @@ var (
 		{"副词", "副詞"},
 		{"亻形", "イ形"},
 		{"连体", "イ形"},
+		{"しや", "しゃ"},
+		{"しゆ", "しゅ"},
+		{"しよ", "しょ"},
 		{"〉", ""},
 		{"〈", ""},
 		{">", ""},
@@ -115,8 +118,14 @@ func TestWordSelect(t *testing.T) {
 }
 
 func TestReplaceFileString(t *testing.T) {
-	for i := 34; i < 40; i++ {
-		rawFilePath := "resources/raw/大家的日语第二版初级2_" + strconv.Itoa(i) + "_raw.txt"
+	for i := 1; i < 26; i++ {
+		var suffix string
+		if i < 10 {
+			suffix = "0"
+		}
+		rawFilePath := "resources/raw/大家的日语第二版初级1_" + suffix + strconv.Itoa(i) + "_raw.txt"
+		//for i := 34; i < 40; i++ {
+		// rawFilePath := "resources/raw/大家的日语第二版初级2_" + strconv.Itoa(i) + "_raw.txt"
 		filePath := strings.ReplaceAll(rawFilePath, "_raw", "")
 		input, err := ioutil.ReadFile(rawFilePath)
 		if err != nil {
@@ -245,7 +254,8 @@ func TestReadAllCsv(t *testing.T) {
 }
 
 func TestReadSingleCsv(t *testing.T) {
-	ReadSingleCsv("resources/大家的日语第二版初级2_36.csv")
+	// ReadSingleCsv("resources/大家的日语第二版初级2_36.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
 }
 
 func ReadSingleCsv(csvFilePath string) {
