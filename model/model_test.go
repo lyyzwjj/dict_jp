@@ -13,6 +13,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"sync"
 	"testing"
 )
 
@@ -34,6 +35,7 @@ var (
 		{"しや", "しゃ"},
 		{"しゆ", "しゅ"},
 		{"しよ", "しょ"},
+		{"权", "ね"},
 		{"〉", ""},
 		{"〈", ""},
 		{">", ""},
@@ -245,17 +247,26 @@ func TestReadAllCsv(t *testing.T) {
 	//	return
 	//}
 	fs, _ := ioutil.ReadDir(dirPath)
+	var wg sync.WaitGroup
 	for _, file := range fs {
 		if !file.IsDir() {
 			fmt.Println(dirPath + file.Name())
 			ReadSingleCsv(dirPath + file.Name())
+			//wg.Add(1)
+			//go func() {
+			//	defer wg.Done()
+			//	fmt.Println(dirPath + file.Name())
+			//	ReadSingleCsv(dirPath + file.Name())
+			//}()
 		}
 	}
+	wg.Wait()
 }
 
 func TestReadSingleCsv(t *testing.T) {
 	// ReadSingleCsv("resources/大家的日语第二版初级2_36.csv")
-	ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
+	// ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级1_05.csv")
 }
 
 func ReadSingleCsv(csvFilePath string) {
