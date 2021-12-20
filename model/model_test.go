@@ -121,7 +121,7 @@ func TestWordSelect(t *testing.T) {
 }
 
 func TestReplaceFileString(t *testing.T) {
-	for i := 37; i < 40; i++ {
+	for i := 40; i < 51; i++ {
 		var suffix string
 		if i < 10 {
 			suffix = "0"
@@ -265,7 +265,7 @@ func TestReadAllCsv(t *testing.T) {
 }
 
 func TestReadSingleCsv(t *testing.T) {
-	ReadSingleCsv("resources/大家的日语第二版初级2_37.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级2_42.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_06.csv")
 }
