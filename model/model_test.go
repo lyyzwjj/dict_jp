@@ -266,23 +266,56 @@ func TestReadAllCsv(t *testing.T) {
 
 func TestDeleteSingleCsv(t *testing.T) {
 	book, unitNo := HandleFilePath("resources/大家的日语第二版初级2_43.csv")
-	var wordIds []int
-	var words []Word
+	var word Word
+	// var words []Word
+	var wordBooks []WordBook
 	// Pluck 单列
-	dao.Repo.Table("word_books").Where("book = ? AND unit_no = ?", book, unitNo).Pluck("word_id", &wordIds)
-	fmt.Println(wordIds)
-	if len(wordIds) > 0 {
-		// dao.Repo.Where("id in ?", wordIds).Find(&words)
-		// 主键直接查
-		if err := dao.Repo.Preload("WordBooks").Find(&words, wordIds).Error; err != nil {
-			if !errors.Is(err, gorm.ErrRecordNotFound) {
-				fmt.Printf("query failed err: %#v\n", err)
+	// var wordIds []int
+	// dao.Repo.Table("word_books").Where("book = ? AND unit_no = ?", book, unitNo).Pluck("word_id", &wordIds)
+	dao.Repo.Where("book = ? AND unit_no = ?", book, unitNo).Find(&wordBooks)
+	wordMap := make(map[uint][]WordBook)
+	for _, wordBook := range wordBooks {
+		if subWordBooks, ok := wordMap[wordBook.WordID]; ok {
+			subWordBooks = append(subWordBooks, wordBook)
+		} else {
+			subWordBooks = []WordBook{wordBook}
+			wordMap[wordBook.WordID] = subWordBooks
+		}
+	}
+	fmt.Println(wordMap)
+	if len(wordMap) > 0 {
+		for wordId, subWordBooks := range wordMap {
+			err := dao.Repo.Find(&word, wordId).Association("WordBooks").Delete(subWordBooks)
+			if err != nil {
+				println(err)
 				return
 			}
-			return
 		}
-		fmt.Println(words)
+		// dao.Repo.Where("id in ?", wordIds).Find(&words)
+		// 主键直接查
+		//if err := dao.Repo.Preload("WordBooks").Find(&words, wordIds).Error; err != nil {
+		//	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		//		fmt.Printf("query failed err: %#v\n", err)
+		//		return
+		//	}
+		//	return
+		//}
+		//fmt.Println(words)
 	}
+
+	// fmt.Println(wordIds)
+	//if len(wordIds) > 0 {
+	//	// dao.Repo.Where("id in ?", wordIds).Find(&words)
+	//	// 主键直接查
+	//	if err := dao.Repo.Preload("WordBooks").Find(&words, wordIds).Error; err != nil {
+	//		if !errors.Is(err, gorm.ErrRecordNotFound) {
+	//			fmt.Printf("query failed err: %#v\n", err)
+	//			return
+	//		}
+	//		return
+	//	}
+	//	fmt.Println(words)
+	//}
 
 	// dao.Repo.Table("words w").Select("w.id").Joins("left join word_books wb on w.id = wb.word_id").Where("wb.book = ? AND wb.unit_no >= ?", book, unitNo).Preload("WordBooks").Find(&words)
 	// dao.Repo.Table("words w").Select(Word{}).Joins("left join word_books wb on w.id = wb.word_id").Where("wb.book = ? AND wb.unit_no >= ?", book, unitNo).Preload("WordBooks").Find(&words)
