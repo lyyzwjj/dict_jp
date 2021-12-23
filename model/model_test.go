@@ -264,21 +264,80 @@ func TestReadAllCsv(t *testing.T) {
 	wg.Wait()
 }
 
+func TestDeleteSingleCsv(t *testing.T) {
+	book, unitNo := HandleFilePath("resources/大家的日语第二版初级2_43.csv")
+	var wordIds []int
+	var words []Word
+	// Pluck 单列
+	dao.Repo.Table("word_books").Where("book = ? AND unit_no = ?", book, unitNo).Pluck("word_id", &wordIds)
+	fmt.Println(wordIds)
+	if len(wordIds) > 0 {
+		// dao.Repo.Where("id in ?", wordIds).Find(&words)
+		// 主键直接查
+		if err := dao.Repo.Preload("WordBooks").Find(&words, wordIds).Error; err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				fmt.Printf("query failed err: %#v\n", err)
+				return
+			}
+			return
+		}
+		fmt.Println(words)
+	}
+
+	// dao.Repo.Table("words w").Select("w.id").Joins("left join word_books wb on w.id = wb.word_id").Where("wb.book = ? AND wb.unit_no >= ?", book, unitNo).Preload("WordBooks").Find(&words)
+	// dao.Repo.Table("words w").Select(Word{}).Joins("left join word_books wb on w.id = wb.word_id").Where("wb.book = ? AND wb.unit_no >= ?", book, unitNo).Preload("WordBooks").Find(&words)
+	// fmt.Println(words)
+
+	//if err := dao.Repo.Where("Kana = ? AND Kanji >= ?", wd.Kana, wd.Kanji).Preload("WordBooks").First(&word).Error; err != nil {
+	//if !errors.Is(err, gorm.ErrRecordNotFound) {
+	//fmt.Printf("query failed err: %#v\n", err)
+	//return
+	//}
+	//var checkOk bool
+	//if word, checkOk = wd.Data2Model(); !checkOk {
+	//fmt.Println("Check failed insert failed")
+	//return
+	//}
+	//if err := dao.Repo.Create(&word).Error; err != nil {
+	//fmt.Printf("word insert failed err: %#v", err)
+	//return
+	//}
+	//} else {
+	//if update, checkOk := wd.DataMergeModel(&word); checkOk {
+	//if !update {
+	//fmt.Println("word doesn't update")
+	//return
+	//}
+	//if err := dao.Repo.Save(&word).Error; err != nil {
+	//fmt.Printf("word update failed err: %#v", err)
+	//return
+	//}
+	//} else {
+	//fmt.Println("Check failed update failed")
+	//return
+	//}
+	//}
+
+}
+
 func TestReadSingleCsv(t *testing.T) {
-	ReadSingleCsv("resources/大家的日语第二版初级2_42.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级2_43.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_06.csv")
 }
 
-func ReadSingleCsv(csvFilePath string) {
-	fileNameWithoutExt := strings.TrimSuffix(path.Base(csvFilePath), path.Ext(csvFilePath))
+func HandleFilePath(filePath string) (book, unitNo string) {
+	fileNameWithoutExt := strings.TrimSuffix(path.Base(filePath), path.Ext(filePath))
 	parts := strings.Split(fileNameWithoutExt, "_")
 	if len(parts) != 2 {
 		fmt.Println("fileName err", fileNameWithoutExt)
 		return
 	}
-	book := parts[0]
-	unitNo := parts[1]
+	return parts[0], parts[1]
+}
+
+func ReadSingleCsv(csvFilePath string) {
+	book, unitNo := HandleFilePath(csvFilePath)
 	f, err := os.Open(csvFilePath)
 	if err != nil {
 		fmt.Println("Open csv file failed Error: ", err)
