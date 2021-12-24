@@ -265,7 +265,7 @@ func TestReadAllCsv(t *testing.T) {
 }
 
 func TestDeleteSingleCsv(t *testing.T) {
-	book, unitNo := HandleFilePath("resources/大家的日语第二版初级2_43.csv")
+	book, unitNo := HandleFilePath("resources/大家的日语第二版初级2_44.csv")
 	var word Word
 	// var words []Word
 	var wordBooks []WordBook
@@ -354,7 +354,7 @@ func TestDeleteSingleCsv(t *testing.T) {
 }
 
 func TestReadSingleCsv(t *testing.T) {
-	ReadSingleCsv("resources/大家的日语第二版初级2_43.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级2_45.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_06.csv")
 }
