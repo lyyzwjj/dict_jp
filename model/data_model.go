@@ -69,8 +69,9 @@ func (wd *WordData) Check() (WordTypeValue int, ok bool) {
 	if ok = checkPitchAccent(wd.PitchAccent); !ok {
 		return
 	}
-	WordTypeValue, ok = wordTypeName2Value(wd.WordTypeName)
-
+	if WordTypeValue, ok = wordTypeName2Value(wd.WordTypeName); !ok {
+		return
+	}
 	return
 }
 

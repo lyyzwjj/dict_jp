@@ -51,6 +51,7 @@ var (
 	WordTypeQuantifier   = wordType{"助数", 1 << 18} //			助数
 	WordTypeHelper       = wordType{"補助", 1 << 19} //			補助
 	Number               = wordType{"数", 1 << 20}  //			数
+	WordTypeConjunction6 = wordType{"接助", 1 << 21} //	接尾		接尾
 	verbNameSet          = map[string]wordType{
 		WordTypeVerb1.name: WordTypeVerb1,
 		WordTypeVerb2.name: WordTypeVerb2,
@@ -79,6 +80,7 @@ var (
 		WordTypeConjunction3.name: WordTypeConjunction3,
 		WordTypeConjunction4.name: WordTypeConjunction4,
 		WordTypeConjunction5.name: WordTypeConjunction5,
+		WordTypeConjunction6.name: WordTypeConjunction6,
 		WordTypeBuildLang.name:    WordTypeBuildLang,
 		WordTypeQuantifier.name:   WordTypeQuantifier,
 		WordTypeHelper.name:       WordTypeHelper,

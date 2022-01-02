@@ -52,6 +52,7 @@ var (
 		{"⑤", "5"},
 		{"⑥", "6"},
 		{"⑦", "7"},
+		{"⑨", "9"},
 	}
 )
 
@@ -354,9 +355,9 @@ func TestDeleteSingleCsv(t *testing.T) {
 }
 
 func TestReadSingleCsv(t *testing.T) {
-	ReadSingleCsv("resources/大家的日语第二版初级2_45.csv")
+	// ReadSingleCsv("resources/大家的日语第二版初级2_45.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
-	// ReadSingleCsv("resources/大家的日语第二版初级1_06.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级1_11.csv")
 }
 
 func HandleFilePath(filePath string) (book, unitNo string) {
