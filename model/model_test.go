@@ -27,6 +27,7 @@ var (
 		{"-", "ー"},
 		{"ー111111", "-1"},
 		{"動I", "動I"},
+		{"動I", "動Ⅰ"},
 		{"十形", "ナ形"},
 		{"動I", "動Ⅰ"},
 		{"副词", "副詞"},
@@ -357,7 +358,7 @@ func TestDeleteSingleCsv(t *testing.T) {
 func TestReadSingleCsv(t *testing.T) {
 	// ReadSingleCsv("resources/大家的日语第二版初级2_45.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
-	ReadSingleCsv("resources/大家的日语第二版初级1_11.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级1_16.csv")
 }
 
 func HandleFilePath(filePath string) (book, unitNo string) {
