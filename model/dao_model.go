@@ -30,30 +30,33 @@ const (
 )
 
 var (
-	WordTypeNil          = wordType{"", 1 << 0}
-	WordTypeVerb1        = wordType{"動Ⅰ", 1 << 1}  //	動Ⅰ		动Ⅰ
-	WordTypeVerb2        = wordType{"動Ⅱ", 1 << 2}  //	動Ⅱ		动Ⅱ
-	WordTypeVerb3        = wordType{"動Ⅲ", 1 << 3}  //	動Ⅲ		动Ⅲ
-	WordTypeNoun         = wordType{"名", 1 << 4}   //	名		名
-	WordTypeAdjectiveI   = wordType{"イ形", 1 << 5}  //	イ形		い形
-	WordTypeAdjectiveNa  = wordType{"ナ形", 1 << 6}  //	ナ形		な形
-	WordTypeAuxiliary    = wordType{"助", 1 << 7}   //	助		助
-	WordTypePronoun      = wordType{"代", 1 << 8}   //	代名詞	代词
-	WordTypeInterjection = wordType{"感", 1 << 9}   //	感		感叹词
-	WordTypeAdverb1      = wordType{"副", 1 << 10}  //	副		副
-	WordTypeAdverb2      = wordType{"副詞", 1 << 11} //	副詞		副词
-	WordTypeConjunction1 = wordType{"連語", 1 << 12} //	連語		连语
-	WordTypeConjunction2 = wordType{"連体", 1 << 13} //	連体		连体
-	WordTypeConjunction3 = wordType{"接", 1 << 14}  //	接		接
-	WordTypeConjunction4 = wordType{"接辞", 1 << 15} //	接辞		接词
-	WordTypeConjunction5 = wordType{"接尾", 1 << 16} //	接尾		接尾
-	WordTypeBuildLang    = wordType{"造語", 1 << 17} //			造语
-	WordTypeQuantifier   = wordType{"助数", 1 << 18} //			助数
-	WordTypeHelper       = wordType{"補助", 1 << 19} //			補助
-	Number               = wordType{"数", 1 << 20}  //			数
-	WordTypeConjunction6 = wordType{"接助", 1 << 21} //	接助		接助
-	WordTypeConjunction7 = wordType{"体", 1 << 22}  //	体		体
-	verbNameSet          = map[string]wordType{
+	WordTypeNil           = wordType{"", 1 << 0}
+	WordTypeVerb1         = wordType{"動Ⅰ", 1 << 1}  //		動Ⅰ		动Ⅰ
+	WordTypeVerb2         = wordType{"動Ⅱ", 1 << 2}  //		動Ⅱ		动Ⅱ
+	WordTypeVerb3         = wordType{"動Ⅲ", 1 << 3}  //		動Ⅲ		动Ⅲ
+	WordTypeNoun          = wordType{"名", 1 << 4}   //		名		名
+	WordTypeAdjectiveI    = wordType{"イ形", 1 << 5}  //	イ形		い形
+	WordTypeAdjectiveNa   = wordType{"ナ形", 1 << 6}  //	ナ形		な形
+	WordTypeAuxiliary     = wordType{"助", 1 << 7}   //		助		助
+	WordTypePronoun       = wordType{"代", 1 << 8}   //		代名詞	代词
+	WordTypeInterjection  = wordType{"感", 1 << 9}   //		感		感叹词
+	WordTypeAdverb1       = wordType{"副", 1 << 10}  //		副		副
+	WordTypeAdverb2       = wordType{"副詞", 1 << 11} //	副詞		副词
+	WordTypeConjunction1  = wordType{"連語", 1 << 12} //	連語		连语
+	WordTypeConjunction2  = wordType{"連体", 1 << 13} //	連体		连体
+	WordTypeConjunction3  = wordType{"接", 1 << 14}  //		接		接
+	WordTypeConjunction4  = wordType{"接辞", 1 << 15} //	接辞		接词
+	WordTypeConjunction5  = wordType{"接尾", 1 << 16} //	接尾		接尾
+	WordTypeBuildLang     = wordType{"造語", 1 << 17} //	造语		造语
+	WordTypeQuantifier    = wordType{"助数", 1 << 18} //	助数		助数
+	WordTypeHelper        = wordType{"補助", 1 << 19} //	補助		補助
+	Number                = wordType{"数", 1 << 20}  //		数
+	WordTypeConjunction6  = wordType{"接助", 1 << 21} //	接助		接助
+	WordTypeConjunction7  = wordType{"体", 1 << 22}  //		体		体
+	WordTypeConjunction8  = wordType{"複助", 1 << 23} //	複助		複助
+	WordTypeConjunction9  = wordType{"補動", 1 << 24} //	補動		補動
+	WordTypeConjunction10 = wordType{"形", 1 << 25}  //		形		形
+	verbNameSet           = map[string]wordType{
 		WordTypeVerb1.name: WordTypeVerb1,
 		WordTypeVerb2.name: WordTypeVerb2,
 		WordTypeVerb3.name: WordTypeVerb3,
@@ -64,29 +67,32 @@ var (
 		WordTypeVerb3.value: WordTypeVerb3,
 	}
 	wordTypeSet = map[string]wordType{
-		WordTypeNil.name:          WordTypeNil,
-		WordTypeNoun.name:         WordTypeNoun,
-		WordTypeVerb1.name:        WordTypeVerb1,
-		WordTypeVerb2.name:        WordTypeVerb2,
-		WordTypeVerb3.name:        WordTypeVerb3,
-		WordTypeAdjectiveI.name:   WordTypeAdjectiveI,
-		WordTypeAdjectiveNa.name:  WordTypeAdjectiveNa,
-		WordTypeAuxiliary.name:    WordTypeAuxiliary,
-		WordTypePronoun.name:      WordTypePronoun,
-		WordTypeInterjection.name: WordTypeInterjection,
-		WordTypeAdverb1.name:      WordTypeAdverb1,
-		WordTypeAdverb2.name:      WordTypeAdverb2,
-		WordTypeConjunction1.name: WordTypeConjunction1,
-		WordTypeConjunction2.name: WordTypeConjunction2,
-		WordTypeConjunction3.name: WordTypeConjunction3,
-		WordTypeConjunction4.name: WordTypeConjunction4,
-		WordTypeConjunction5.name: WordTypeConjunction5,
-		WordTypeConjunction6.name: WordTypeConjunction6,
-		WordTypeConjunction7.name: WordTypeConjunction7,
-		WordTypeBuildLang.name:    WordTypeBuildLang,
-		WordTypeQuantifier.name:   WordTypeQuantifier,
-		WordTypeHelper.name:       WordTypeHelper,
-		Number.name:               Number,
+		WordTypeNil.name:           WordTypeNil,
+		WordTypeNoun.name:          WordTypeNoun,
+		WordTypeVerb1.name:         WordTypeVerb1,
+		WordTypeVerb2.name:         WordTypeVerb2,
+		WordTypeVerb3.name:         WordTypeVerb3,
+		WordTypeAdjectiveI.name:    WordTypeAdjectiveI,
+		WordTypeAdjectiveNa.name:   WordTypeAdjectiveNa,
+		WordTypeAuxiliary.name:     WordTypeAuxiliary,
+		WordTypePronoun.name:       WordTypePronoun,
+		WordTypeInterjection.name:  WordTypeInterjection,
+		WordTypeAdverb1.name:       WordTypeAdverb1,
+		WordTypeAdverb2.name:       WordTypeAdverb2,
+		WordTypeConjunction1.name:  WordTypeConjunction1,
+		WordTypeConjunction2.name:  WordTypeConjunction2,
+		WordTypeConjunction3.name:  WordTypeConjunction3,
+		WordTypeConjunction4.name:  WordTypeConjunction4,
+		WordTypeConjunction5.name:  WordTypeConjunction5,
+		WordTypeConjunction6.name:  WordTypeConjunction6,
+		WordTypeConjunction7.name:  WordTypeConjunction7,
+		WordTypeConjunction8.name:  WordTypeConjunction8,
+		WordTypeConjunction9.name:  WordTypeConjunction9,
+		WordTypeConjunction10.name: WordTypeConjunction10,
+		WordTypeBuildLang.name:     WordTypeBuildLang,
+		WordTypeQuantifier.name:    WordTypeQuantifier,
+		WordTypeHelper.name:        WordTypeHelper,
+		Number.name:                Number,
 	}
 
 	transitiveTypeSet = map[string]bool{

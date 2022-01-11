@@ -13,7 +13,6 @@ import (
 	"path"
 	"strconv"
 	"strings"
-	"sync"
 	"testing"
 )
 
@@ -28,6 +27,7 @@ var (
 		{"ー111111", "-1"},
 		{"動I", "動I"},
 		{"動I", "動Ⅰ"},
+		{"動Ⅱ", "動Ⅱ"},
 		{"十形", "ナ形"},
 		{"動I", "動Ⅰ"},
 		{"副词", "副詞"},
@@ -250,7 +250,7 @@ func TestReadAllCsv(t *testing.T) {
 	//	return
 	//}
 	fs, _ := ioutil.ReadDir(dirPath)
-	var wg sync.WaitGroup
+	// var wg sync.WaitGroup
 	for _, file := range fs {
 		if !file.IsDir() {
 			fmt.Println(dirPath + file.Name())
@@ -263,7 +263,7 @@ func TestReadAllCsv(t *testing.T) {
 			//}()
 		}
 	}
-	wg.Wait()
+	// wg.Wait()
 }
 
 func TestDeleteSingleCsv(t *testing.T) {
@@ -358,7 +358,7 @@ func TestDeleteSingleCsv(t *testing.T) {
 func TestReadSingleCsv(t *testing.T) {
 	// ReadSingleCsv("resources/大家的日语第二版初级2_45.csv")
 	// ReadSingleCsv("resources/大家的日语第二版初级1_04.csv")
-	ReadSingleCsv("resources/大家的日语第二版初级1_20.csv")
+	ReadSingleCsv("resources/大家的日语第二版初级1_25.csv")
 }
 
 func HandleFilePath(filePath string) (book, unitNo string) {
