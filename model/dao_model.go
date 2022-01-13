@@ -56,6 +56,7 @@ var (
 	WordTypeConjunction8  = wordType{"複助", 1 << 23} //	複助		複助
 	WordTypeConjunction9  = wordType{"補動", 1 << 24} //	補動		補動
 	WordTypeConjunction10 = wordType{"形", 1 << 25}  //		形		形
+	WordTypeConjunction11 = wordType{"助動", 1 << 26} //	形		形
 	verbNameSet           = map[string]wordType{
 		WordTypeVerb1.name: WordTypeVerb1,
 		WordTypeVerb2.name: WordTypeVerb2,
@@ -89,6 +90,7 @@ var (
 		WordTypeConjunction8.name:  WordTypeConjunction8,
 		WordTypeConjunction9.name:  WordTypeConjunction9,
 		WordTypeConjunction10.name: WordTypeConjunction10,
+		WordTypeConjunction11.name: WordTypeConjunction11,
 		WordTypeBuildLang.name:     WordTypeBuildLang,
 		WordTypeQuantifier.name:    WordTypeQuantifier,
 		WordTypeHelper.name:        WordTypeHelper,
