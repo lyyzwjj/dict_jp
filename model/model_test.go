@@ -188,7 +188,7 @@ func dataDelete(wd *WordData) {
 
 func dataInsert(wd *WordData) {
 	var word Word
-	if err := dao.Repo.Where("Kana = ? AND Kanji >= ?", wd.Kana, wd.Kanji).Preload("WordBooks").First(&word).Error; err != nil {
+	if err := dao.Repo.Where("Kana = ? AND Kanji = ?", wd.Kana, wd.Kanji).Preload("WordBooks").First(&word).Error; err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			fmt.Printf("query failed err: %#v\n", err)
 			return

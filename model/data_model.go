@@ -121,7 +121,10 @@ func (wd *WordData) DataMergeModel(w *Word) (update, checkOk bool) {
 		trimDescription := strings.TrimSpace(wd.Description)
 		if trimDescription != "" && !strings.Contains(w.Description, trimDescription) {
 			update = true
-			w.Description = w.Description + "\n" + wd.Description
+			if w.Description != "" {
+				w.Description = w.Description + "\n"
+			}
+			w.Description = w.Description + wd.Description
 		}
 		if isVerbByName(wd.WordTypeName) && !isVerbByValue(w.WordTypeValue) {
 			masu := strings.TrimSpace(wd.Masu)

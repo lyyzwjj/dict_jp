@@ -1,5 +1,7 @@
 package model
 
+// kana like 'ー%' 促音
+// kana like '一%' 连接词
 type wordType struct {
 	name  string
 	value int
