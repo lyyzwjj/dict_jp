@@ -21,6 +21,7 @@ func init() {
 		panic("failed to connect database")
 	} else {
 		repoConf, _ := Repo.DB()
+		// Repo.Config.Logger = logger.Default.LogMode(logger.Info)
 		repoConf.SetMaxIdleConns(2)
 		repoConf.SetMaxOpenConns(10)
 	}
